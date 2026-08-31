@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const db = require('./models');
 const { notFound, errorHandler } = require('./middlewares/errorHandler');
-const { apiLimiter, authLimiter } = require('./middlewares/rateLimiter');
+const { apiLimiter } = require('./middlewares/rateLimiter');
 
 // ---- ייבוא נתיבים ----
 const authRoutes = require('./routes/auth.routes');
@@ -42,7 +42,7 @@ app.get('/api/health', (req, res) => {
 // ---- נתיבי ה-API ----
 // המגביל הכללי חל על כל /api; המגביל המחמיר חל בנוסף על נתיבי האימות.
 app.use('/api', apiLimiter);
-app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes); // המגביל המחמיר מוחל בתוך הראוטר, רק על /login
 app.use('/api/dishes', dishRoutes);
 app.use('/api/tables', tableRoutes);
 app.use('/api/customers', customerRoutes);

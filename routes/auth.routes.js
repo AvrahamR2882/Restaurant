@@ -8,9 +8,10 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const { verifyToken, authorize } = require('../middlewares/auth.middleware');
+const { authLimiter } = require('../middlewares/rateLimiter');
 
 router.post('/register', verifyToken, authorize('manager'), authController.register);
-router.post('/login', authController.login);
+router.post('/login', authLimiter, authController.login); // הגנת brute-force רק כאן
 router.get('/me', verifyToken, authController.me);
 
 // ניהול צוות — מנהל בלבד

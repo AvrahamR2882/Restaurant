@@ -16,16 +16,19 @@ const apiLimiter = rateLimit({
     }),
 });
 
-// מגביל מחמיר — לנתיבי התחברות/הרשמה, נגד ניחוש סיסמאות (brute-force).
+// מגביל מחמיר — חל רק על ניסיונות התחברות (login), נגד ניחוש סיסמאות (brute-force).
+// לא חל על /me או /users כדי לא לחסום שימוש רגיל בפאנל.
 const authLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // חלון של 10 דקות
-  max: 10, // עד 10 ניסיונות בלבד
+  windowMs: 15 * 60 * 1000, // חלון של 15 דקות
+  max: 20, // עד 20 ניסיונות התחברות בחלון
   standardHeaders: true,
   legacyHeaders: false,
+  // סופר רק בקשות שנכשלו — התחברות מוצלחת לא נספרת (skipSuccessfulRequests).
+  skipSuccessfulRequests: true,
   handler: (req, res) =>
     res.status(429).json({
       success: false,
-      message: 'Too many authentication attempts. Please try again later.',
+      message: 'Too many login attempts. Please try again in a few minutes.',
     }),
 });
 

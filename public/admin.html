@@ -12,10 +12,22 @@
 </head>
 <body>
 
+  <!-- ===== ICON SPRITE ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-dish" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5.5 18a6.5 6.5 0 0 1 13 0"/><path d="M12 8.5V5.5"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8.5" width="18" height="3.4" rx="1"/><path d="M5.5 11.9V19M18.5 11.9V19"/></symbol>
+    <symbol id="i-customer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
+    <symbol id="i-reservation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4"/></symbol>
+    <symbol id="i-order" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4V3.5Z"/><path d="M9 8h6M9 12h5"/></symbol>
+    <symbol id="i-staff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5a5.5 5.5 0 0 1 11 0"/><path d="M16 6.9a3 3 0 0 1 0 5.2"/><path d="M17.5 15.4a5.5 5.5 0 0 1 3 4.1"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2l4 10-4 10-4-10 4-10Z"/></symbol>
+  </svg>
+
   <!-- ===== LOGIN ===== -->
   <div class="login-wrap" id="login-view">
     <form class="login-card" id="login-form">
-      <div class="brand"><span class="mark">🍽️</span> אין עוד מלבדו</div>
+      <div class="brand"><span class="mark"><svg><use href="#i-brand"/></svg></span> אין עוד מלבדו</div>
       <div class="sub">כניסת צוות</div>
       <div class="field">
         <label for="login-username">שם משתמש</label>
@@ -35,7 +47,7 @@
   <div id="app-view" class="hidden">
     <div class="topbar">
       <div class="topbar-inner">
-        <span class="brand"><span class="mark">🍽️</span> ניהול</span>
+        <span class="brand"><span class="mark"><svg><use href="#i-brand"/></svg></span> ניהול</span>
         <span class="tag" id="env-tag">אין עוד מלבדו</span>
         <div class="spacer"></div>
         <span class="who">שלום, <b id="who-name">—</b> · <span id="who-role">—</span></span>
@@ -44,12 +56,12 @@
     </div>
 
     <nav class="tabs">
-      <button class="tab active" data-tab="dishes">🍕 תפריט</button>
-      <button class="tab" data-tab="tables">🪑 שולחנות</button>
-      <button class="tab" data-tab="customers">🙋 לקוחות</button>
-      <button class="tab" data-tab="reservations">📅 הזמנות שולחן</button>
-      <button class="tab" data-tab="orders">🧾 הזמנות</button>
-      <button class="tab manager-only" data-tab="staff">👔 צוות</button>
+      <button class="tab active" data-tab="dishes"><svg><use href="#i-dish"/></svg> תפריט</button>
+      <button class="tab" data-tab="tables"><svg><use href="#i-table"/></svg> שולחנות</button>
+      <button class="tab" data-tab="customers"><svg><use href="#i-customer"/></svg> לקוחות</button>
+      <button class="tab" data-tab="reservations"><svg><use href="#i-reservation"/></svg> הזמנות שולחן</button>
+      <button class="tab" data-tab="orders"><svg><use href="#i-order"/></svg> הזמנות</button>
+      <button class="tab manager-only" data-tab="staff"><svg><use href="#i-staff"/></svg> צוות</button>
     </nav>
 
     <main class="main">
@@ -58,7 +70,7 @@
       <section class="panel active" id="panel-dishes">
         <div class="grid">
           <div class="card manager-only">
-            <h3>➕ הוספת מנה</h3>
+            <h3><svg><use href="#i-plus"/></svg> הוספת מנה</h3>
             <div class="field"><label>שם המנה</label><input type="text" id="dish-name" placeholder="שניצל"></div>
             <div class="field"><label>מחיר (₪)</label><input type="number" id="dish-price" min="0" step="0.5" placeholder="0"></div>
             <div class="field"><label>קטגוריה</label>
@@ -82,7 +94,7 @@
       <section class="panel" id="panel-tables">
         <div class="grid">
           <div class="card manager-only">
-            <h3>➕ הוספת שולחן</h3>
+            <h3><svg><use href="#i-plus"/></svg> הוספת שולחן</h3>
             <div class="field"><label>מספר מקומות</label><input type="number" id="table-seats" min="1" placeholder="4"></div>
             <div class="field"><label>מספר שולחן (רשות — אחרת אוטומטי)</label><input type="number" id="table-number" min="1" placeholder="אוטומטי"></div>
             <button class="btn btn-gold btn-full" id="table-add">הוסף שולחן</button>
@@ -98,7 +110,7 @@
       <section class="panel" id="panel-customers">
         <div class="grid">
           <div class="card">
-            <h3>🪑 שיבוץ לקוח</h3>
+            <h3><svg><use href="#i-customer"/></svg> שיבוץ לקוח</h3>
             <div class="field"><label>שם הלקוח</label><input type="text" id="cust-name" placeholder="ישראל ישראלי"></div>
             <div class="field"><label>טלפון</label><input type="text" id="cust-phone" placeholder="050-0000000"></div>
             <div class="field"><label>שולחן</label><select id="cust-table"><option value="">— אוטומטי (פנוי ראשון) —</option></select></div>
@@ -121,7 +133,7 @@
       <section class="panel" id="panel-orders">
         <div class="grid">
           <div class="card">
-            <h3>🆕 פתיחת הזמנה</h3>
+            <h3><svg><use href="#i-plus"/></svg> פתיחת הזמנה</h3>
             <div class="field"><label>שולחן (תפוס)</label><select id="order-table"><option value="">בחר שולחן...</option></select></div>
             <button class="btn btn-gold btn-full" id="order-create">פתח הזמנה</button>
             <p class="r-sub" style="margin-top:10px">יש לשבץ לקוח לשולחן לפני פתיחת הזמנה.</p>
@@ -143,7 +155,7 @@
       <section class="panel manager-only" id="panel-staff">
         <div class="grid">
           <div class="card">
-            <h3>➕ הוספת עובד</h3>
+            <h3><svg><use href="#i-plus"/></svg> הוספת עובד</h3>
             <div class="field"><label>שם משתמש</label><input type="text" id="staff-username" placeholder="david"></div>
             <div class="field"><label>אימייל</label><input type="email" id="staff-email" placeholder="david@rest.local"></div>
             <div class="field"><label>סיסמה</label><input type="password" id="staff-password" placeholder="לפחות 6 תווים"></div>

@@ -96,7 +96,7 @@ async function loadDishes() {
     const res = await API.get('/dishes');
     state.dishesCache = res.data;
     const el = $('dishes-list');
-    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic">🍽️</span>אין מנות</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic"><svg><use href="#i-dish"/></svg></span>אין מנות</div>'; return; }
     const isManager = state.user.role === 'manager';
     el.innerHTML = res.data.map((d) => `
       <div class="row">
@@ -132,7 +132,7 @@ async function loadTables() {
   await guard(async () => {
     const res = await API.get('/tables');
     const el = $('tables-list');
-    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic">🪑</span>אין שולחנות</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic"><svg><use href="#i-table"/></svg></span>אין שולחנות</div>'; return; }
     const isManager = state.user.role === 'manager';
     el.innerHTML = res.data.map((t) => `
       <div class="row">
@@ -181,12 +181,12 @@ async function loadCustomers() {
       free.map((t) => `<option value="${t.id}">שולחן ${t.number} (${t.seats} מק')</option>`).join('');
 
     const el = $('customers-list');
-    if (!custRes.data.length) { el.innerHTML = '<div class="empty"><span class="ic">🙋</span>אין לקוחות יושבים</div>'; return; }
+    if (!custRes.data.length) { el.innerHTML = '<div class="empty"><span class="ic"><svg><use href="#i-customer"/></svg></span>אין לקוחות יושבים</div>'; return; }
     el.innerHTML = custRes.data.map((c) => `
       <div class="row">
         <div class="r-main">
           <div class="r-title">${esc(c.name)}</div>
-          <div class="r-sub">📞 ${esc(c.phone) || '—'} · 🪑 ${c.Table ? 'שולחן ' + c.Table.number : 'ללא שולחן'}</div>
+          <div class="r-sub">${esc(c.phone) || '—'} · ${c.Table ? 'שולחן ' + c.Table.number : 'ללא שולחן'}</div>
         </div>
         <button class="btn btn-danger btn-sm" data-del-cust="${c.id}">שחרר</button>
       </div>`).join('');
@@ -213,14 +213,14 @@ async function loadReservations() {
   await guard(async () => {
     const res = await API.get('/reservations');
     const el = $('reservations-list');
-    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic">📅</span>אין הזמנות שולחן</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic"><svg><use href="#i-reservation"/></svg></span>אין הזמנות שולחן</div>'; return; }
     el.innerHTML = res.data.map((r) => {
       const when = new Date(r.reservationTime).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' });
       return `
       <div class="row">
         <div class="r-main">
           <div class="r-title">${esc(r.customerName)} <span class="badge b-${r.status}">${STATUS_HE[r.status]}</span></div>
-          <div class="r-sub">📞 ${esc(r.phone) || '—'} · 👥 ${r.partySize} · 🕐 ${when}${r.Table ? ' · 🪑 שולחן ' + r.Table.number : ''}</div>
+          <div class="r-sub">${esc(r.phone) || '—'} · ${r.partySize} סועדים · ${when}${r.Table ? ' · שולחן ' + r.Table.number : ''}</div>
         </div>
         <div class="r-actions">
           ${r.status === 'pending' ? `<button class="btn btn-green btn-sm" data-seat-res="${r.id}">סמן כהושבה</button>` : ''}
@@ -263,7 +263,7 @@ async function loadOrders() {
       occupied.map((t) => `<option value="${t.id}">שולחן ${t.number}</option>`).join('');
 
     const el = $('orders-list');
-    if (!ordersRes.data.length) { el.innerHTML = '<div class="empty"><span class="ic">🧾</span>אין הזמנות</div>'; return; }
+    if (!ordersRes.data.length) { el.innerHTML = '<div class="empty"><span class="ic"><svg><use href="#i-order"/></svg></span>אין הזמנות</div>'; return; }
     el.innerHTML = ordersRes.data.map(renderOrder).join('');
   });
 }
@@ -287,7 +287,7 @@ function renderOrder(o) {
         <div class="order-id">${o.id}</div>
         <div class="r-main">
           <div class="r-title">${o.Customer ? esc(o.Customer.name) : 'ללא לקוח'}</div>
-          <div class="r-sub">🪑 ${o.Table ? 'שולחן ' + o.Table.number : '—'}</div>
+          <div class="r-sub">${o.Table ? 'שולחן ' + o.Table.number : '—'}</div>
         </div>
         <span class="badge b-${o.status}">${STATUS_HE[o.status]}</span>
       </div>
@@ -336,7 +336,7 @@ async function loadStaff() {
   await guard(async () => {
     const res = await API.get('/auth/users');
     const el = $('staff-list');
-    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic">👔</span>אין עובדים</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic"><svg><use href="#i-staff"/></svg></span>אין עובדים</div>'; return; }
     el.innerHTML = res.data.map((u) => {
       const roleHe = u.role === 'manager' ? 'מנהל' : 'מלצר';
       const roleCls = u.role === 'manager' ? 'b-reserved' : 'b-open';
