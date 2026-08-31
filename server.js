@@ -60,9 +60,8 @@ async function start() {
     await db.sequelize.authenticate();
     console.log('✅ Database connection established.');
 
-    // יוצר/מעדכן את הטבלאות לפי המודלים.
-    // alter:true מסנכרן שינויים במבנה בזמן פיתוח.
-    await db.sequelize.sync({ alter: true });
+    // יוצר את הטבלאות לפי המודלים אם אינן קיימות (בטוח, לא משנה טבלאות עם נתונים).
+    await db.sequelize.sync();
     console.log('✅ Models synchronized (tables ready).');
 
     app.listen(PORT, () => {

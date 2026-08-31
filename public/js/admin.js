@@ -76,7 +76,7 @@ $('logout-btn').addEventListener('click', () => { API.clearToken(); showLogin();
 // ============================================================
 const LOADERS = {
   dishes: loadDishes, tables: loadTables, customers: loadCustomers,
-  reservations: loadReservations, orders: loadOrders,
+  reservations: loadReservations, orders: loadOrders, staff: loadStaff,
 };
 document.querySelectorAll('.tab').forEach((tab) => {
   tab.addEventListener('click', () => {
@@ -327,6 +327,48 @@ $('orders-list').addEventListener('click', (e) => {
   }
   if (el.dataset.close) guard(async () => { await API.patch(`/orders/${el.dataset.close}/close`); toast('החשבון נסגר 💳', 'success'); loadOrders(); });
   if (el.dataset.cancel) guard(async () => { await API.patch(`/orders/${el.dataset.cancel}/cancel`); toast('ההזמנה בוטלה'); loadOrders(); });
+});
+
+// ============================================================
+//  צוות (Staff / Users) — מנהל בלבד
+// ============================================================
+async function loadStaff() {
+  await guard(async () => {
+    const res = await API.get('/auth/users');
+    const el = $('staff-list');
+    if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic">👔</span>אין עובדים</div>'; return; }
+    el.innerHTML = res.data.map((u) => {
+      const roleHe = u.role === 'manager' ? 'מנהל' : 'מלצר';
+      const roleCls = u.role === 'manager' ? 'b-reserved' : 'b-open';
+      const isMe = u.id === state.user.id;
+      return `
+      <div class="row">
+        <div class="r-main">
+          <div class="r-title">${esc(u.username)} <span class="badge ${roleCls}">${roleHe}</span></div>
+          <div class="r-sub">${esc(u.email)}</div>
+        </div>
+        ${isMe
+          ? '<span class="r-sub">(אתה)</span>'
+          : `<button class="btn btn-danger btn-sm" data-del-user="${u.id}">מחק</button>`}
+      </div>`;
+    }).join('');
+  });
+}
+$('staff-add').addEventListener('click', () => guard(async () => {
+  const body = {
+    username: $('staff-username').value.trim(),
+    email: $('staff-email').value.trim(),
+    password: $('staff-password').value,
+    role: $('staff-role').value,
+  };
+  await API.post('/auth/register', body);
+  $('staff-username').value = ''; $('staff-email').value = ''; $('staff-password').value = '';
+  toast('העובד נוסף ✅', 'success');
+  loadStaff();
+}));
+$('staff-list').addEventListener('click', (e) => {
+  const id = e.target.dataset.delUser;
+  if (id) guard(async () => { await API.del(`/auth/users/${id}`); toast('העובד נמחק'); loadStaff(); });
 });
 
 // ---------- אתחול ----------

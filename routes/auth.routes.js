@@ -13,4 +13,8 @@ router.post('/register', verifyToken, authorize('manager'), authController.regis
 router.post('/login', authController.login);
 router.get('/me', verifyToken, authController.me);
 
+// ניהול צוות — מנהל בלבד
+router.get('/users', verifyToken, authorize('manager'), authController.getAllUsers);
+router.delete('/users/:id', verifyToken, authorize('manager'), authController.deleteUser);
+
 module.exports = router;

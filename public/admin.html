@@ -49,6 +49,7 @@
       <button class="tab" data-tab="customers">🙋 לקוחות</button>
       <button class="tab" data-tab="reservations">📅 הזמנות שולחן</button>
       <button class="tab" data-tab="orders">🧾 הזמנות</button>
+      <button class="tab manager-only" data-tab="staff">👔 צוות</button>
     </nav>
 
     <main class="main">
@@ -134,6 +135,29 @@
               <button class="chip" data-filter="cancelled">בוטלו</button>
             </div>
             <div id="orders-list"><p class="loading">טוען...</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STAFF -->
+      <section class="panel manager-only" id="panel-staff">
+        <div class="grid">
+          <div class="card">
+            <h3>➕ הוספת עובד</h3>
+            <div class="field"><label>שם משתמש</label><input type="text" id="staff-username" placeholder="david"></div>
+            <div class="field"><label>אימייל</label><input type="email" id="staff-email" placeholder="david@rest.local"></div>
+            <div class="field"><label>סיסמה</label><input type="password" id="staff-password" placeholder="לפחות 6 תווים"></div>
+            <div class="field"><label>תפקיד</label>
+              <select id="staff-role">
+                <option value="waiter" selected>מלצר</option>
+                <option value="manager">מנהל</option>
+              </select>
+            </div>
+            <button class="btn btn-gold btn-full" id="staff-add">הוסף עובד</button>
+          </div>
+          <div>
+            <div class="panel-head"><h2>צוות המסעדה</h2></div>
+            <div class="list" id="staff-list"><p class="loading">טוען...</p></div>
           </div>
         </div>
       </section>

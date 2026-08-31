@@ -51,3 +51,24 @@ exports.login = asyncHandler(async (req, res) => {
 exports.me = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: req.user });
 });
+
+// GET /api/auth/users — רשימת כל העובדים (מנהל בלבד)
+exports.getAllUsers = asyncHandler(async (req, res) => {
+  // toJSON על כל משתמש מסיר את ה-passwordHash אוטומטית.
+  const users = await User.findAll({ order: [['id', 'ASC']] });
+  res.status(200).json({ success: true, count: users.length, data: users });
+});
+
+// DELETE /api/auth/users/:id — מחיקת עובד (מנהל בלבד)
+exports.deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findByPk(req.params.id);
+  if (!user) throw new AppError(404, `User with id ${req.params.id} not found`);
+
+  // מניעת מחיקה עצמית — מנהל לא יכול למחוק את החשבון שממנו הוא מחובר.
+  if (user.id === req.user.id) {
+    throw new AppError(400, 'You cannot delete your own account');
+  }
+
+  await user.destroy();
+  res.status(200).json({ success: true, message: 'User deleted successfully' });
+});
