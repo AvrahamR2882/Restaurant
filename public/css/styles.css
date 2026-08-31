@@ -236,6 +236,13 @@ h1, h2, h3, .serif { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; 
   -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 74%, transparent 93%);
   mask-image: radial-gradient(circle at 50% 50%, #000 74%, transparent 93%);
 }
+.kosher-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Frank Ruhl Libre', serif; font-size: 0.92rem; font-weight: 500;
+  color: var(--gold); border: 1px solid rgba(190,138,61,0.55); border-radius: 50px;
+  padding: 5px 20px; margin-bottom: 14px; letter-spacing: 0.06em;
+}
+.kosher-badge::before, .kosher-badge::after { content: '◆'; font-size: 0.55rem; opacity: 0.75; }
 .footer a { color: var(--gold); text-decoration: none; }
 .footer .small { font-size: 0.85rem; opacity: 0.7; margin-top: 8px; }
 
