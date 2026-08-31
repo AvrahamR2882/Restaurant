@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ניהול · אין עוד מלבדו</title>
+  <link rel="icon" type="image/jpeg" href="/images/logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Heebo:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- ===== LOGIN ===== -->
+  <div class="login-wrap" id="login-view">
+    <form class="login-card" id="login-form">
+      <div class="brand"><span class="mark">🍽️</span> אין עוד מלבדו</div>
+      <div class="sub">כניסת צוות</div>
+      <div class="field">
+        <label for="login-username">שם משתמש</label>
+        <input type="text" id="login-username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="login-password">סיסמה</label>
+        <input type="password" id="login-password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-gold btn-full">התחברות</button>
+      <p class="login-note" id="login-note"></p>
+      <p class="login-hint">גישה לצוות המסעדה בלבד</p>
+    </form>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div id="app-view" class="hidden">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <span class="brand"><span class="mark">🍽️</span> ניהול</span>
+        <span class="tag" id="env-tag">אין עוד מלבדו</span>
+        <div class="spacer"></div>
+        <span class="who">שלום, <b id="who-name">—</b> · <span id="who-role">—</span></span>
+        <button class="btn btn-ghost btn-sm" id="logout-btn">התנתקות</button>
+      </div>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="dishes">🍕 תפריט</button>
+      <button class="tab" data-tab="tables">🪑 שולחנות</button>
+      <button class="tab" data-tab="customers">🙋 לקוחות</button>
+      <button class="tab" data-tab="reservations">📅 הזמנות שולחן</button>
+      <button class="tab" data-tab="orders">🧾 הזמנות</button>
+    </nav>
+
+    <main class="main">
+
+      <!-- DISHES -->
+      <section class="panel active" id="panel-dishes">
+        <div class="grid">
+          <div class="card manager-only">
+            <h3>➕ הוספת מנה</h3>
+            <div class="field"><label>שם המנה</label><input type="text" id="dish-name" placeholder="שניצל"></div>
+            <div class="field"><label>מחיר (₪)</label><input type="number" id="dish-price" min="0" step="0.5" placeholder="0"></div>
+            <div class="field"><label>קטגוריה</label>
+              <select id="dish-category">
+                <option value="starter">ראשונה</option>
+                <option value="main" selected>עיקרית</option>
+                <option value="dessert">קינוח</option>
+                <option value="drink">שתייה</option>
+              </select>
+            </div>
+            <button class="btn btn-gold btn-full" id="dish-add">הוסף מנה</button>
+          </div>
+          <div>
+            <div class="panel-head"><h2>תפריט</h2><span class="spacer"></span></div>
+            <div class="list" id="dishes-list"><p class="loading">טוען...</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABLES -->
+      <section class="panel" id="panel-tables">
+        <div class="grid">
+          <div class="card manager-only">
+            <h3>➕ הוספת שולחן</h3>
+            <div class="field"><label>מספר מקומות</label><input type="number" id="table-seats" min="1" placeholder="4"></div>
+            <div class="field"><label>מספר שולחן (רשות — אחרת אוטומטי)</label><input type="number" id="table-number" min="1" placeholder="אוטומטי"></div>
+            <button class="btn btn-gold btn-full" id="table-add">הוסף שולחן</button>
+          </div>
+          <div>
+            <div class="panel-head"><h2>שולחנות</h2></div>
+            <div class="list" id="tables-list"><p class="loading">טוען...</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section class="panel" id="panel-customers">
+        <div class="grid">
+          <div class="card">
+            <h3>🪑 שיבוץ לקוח</h3>
+            <div class="field"><label>שם הלקוח</label><input type="text" id="cust-name" placeholder="ישראל ישראלי"></div>
+            <div class="field"><label>טלפון</label><input type="text" id="cust-phone" placeholder="050-0000000"></div>
+            <div class="field"><label>שולחן</label><select id="cust-table"><option value="">— אוטומטי (פנוי ראשון) —</option></select></div>
+            <button class="btn btn-gold btn-full" id="cust-add">שבץ לקוח</button>
+          </div>
+          <div>
+            <div class="panel-head"><h2>לקוחות יושבים</h2></div>
+            <div class="list" id="customers-list"><p class="loading">טוען...</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESERVATIONS -->
+      <section class="panel" id="panel-reservations">
+        <div class="panel-head"><h2>הזמנות שולחן</h2></div>
+        <div class="list" id="reservations-list"><p class="loading">טוען...</p></div>
+      </section>
+
+      <!-- ORDERS -->
+      <section class="panel" id="panel-orders">
+        <div class="grid">
+          <div class="card">
+            <h3>🆕 פתיחת הזמנה</h3>
+            <div class="field"><label>שולחן (תפוס)</label><select id="order-table"><option value="">בחר שולחן...</option></select></div>
+            <button class="btn btn-gold btn-full" id="order-create">פתח הזמנה</button>
+            <p class="r-sub" style="margin-top:10px">יש לשבץ לקוח לשולחן לפני פתיחת הזמנה.</p>
+          </div>
+          <div>
+            <div class="panel-head"><h2>הזמנות</h2></div>
+            <div class="filters" id="order-filters">
+              <button class="chip active" data-filter="">הכל</button>
+              <button class="chip" data-filter="open">פתוחות</button>
+              <button class="chip" data-filter="closed">סגורות</button>
+              <button class="chip" data-filter="cancelled">בוטלו</button>
+            </div>
+            <div id="orders-list"><p class="loading">טוען...</p></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

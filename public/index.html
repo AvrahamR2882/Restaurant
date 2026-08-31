@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מסעדת אין עוד מלבדו</title>
+  <meta name="description" content="מסעדת אין עוד מלבדו — חוויה קולינרית, אווירה חמה, והזמנת שולחן אונליין.">
+  <link rel="icon" type="image/jpeg" href="/images/logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;800;900&family=Heebo:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="nav">
+    <div class="container">
+      <a href="#home" class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2l4 10-4 10-4-10 4-10Z"/></svg></span> אין עוד מלבדו</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="תפריט">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="#home">בית</a>
+        <a href="#about">אודות</a>
+        <a href="#menu">תפריט</a>
+        <a href="#wine">בר יין</a>
+        <a href="#contact">צור קשר</a>
+        <a href="#reserve" class="cta">הזמנת שולחן</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero" id="home">
+    <div class="container">
+      <div class="hero-inner hero-center">
+        <img class="hero-logo" src="/images/logo.jpg" alt="אין עוד מלבדו — מסעדת בוטיק ובר יין">
+        <p class="hero-tagline">מקום אינטימי לערב מיוחד — מנות שף מוקפדות, בר יין עם יינן מוסמך,<br>ואירוח שיודע לכבד את מי שיושב לשולחן.</p>
+        <div class="hero-actions">
+          <a href="#reserve" class="btn btn-gold">הזמנת שולחן</a>
+          <a href="#menu" class="btn btn-ghost">לצפייה בתפריט</a>
+        </div>
+        <p class="hero-meta">מספר שולחנות מוגבל · מומלץ להזמין מראש</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="section about" id="about">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">הסיפור שלנו</p>
+        <h2 class="section-title">מסעדה שנולדה מאהבה לאוכל</h2>
+        <p class="section-intro">כבר למעלה מעשור אנחנו מגישים מנות שמחברות בין מסורת לחדשנות. כל צלחת מבושלת באהבה, מחומרי גלם טריים, בידיים של שף שמאמין שאוכל טוב מקרב לבבות.</p>
+        <div class="stats">
+          <div class="stat"><b>10+</b><span>שנות ניסיון</span></div>
+          <div class="stat"><b>40</b><span>מנות בתפריט</span></div>
+          <div class="stat"><b>15K</b><span>לקוחות מרוצים</span></div>
+        </div>
+      </div>
+      <div class="about-plate" role="img" aria-label="כלי הגשה מהודרים במסעדה"></div>
+    </div>
+  </section>
+
+  <!-- ===== MENU ===== -->
+  <section class="section menu" id="menu">
+    <div class="container">
+      <div class="center">
+        <p class="eyebrow">בתיאבון</p>
+        <h2 class="section-title">התפריט שלנו</h2>
+        <p class="section-intro">מגוון מנות טריות, מתחלף לפי העונה. המחירים מוצגים בשקלים.</p>
+      </div>
+      <div class="menu-cats" id="menu-cats">
+        <p class="menu-loading">טוען תפריט...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WINE BAR ===== -->
+  <section class="section wine" id="wine">
+    <div class="container wine-grid">
+      <div>
+        <p class="eyebrow">מרתף היינות</p>
+        <h2 class="section-title">בר יין בחתימת יינן</h2>
+        <p class="section-intro">מבחר תוויות שנבחר בקפידה — ממקבי בוטיק מקומיים ועד קלאסיקות מהעולם. היינן המוסמך שלנו כאן כדי להתאים לכל מנה את הכוס המדויקת.</p>
+        <div class="wine-features">
+          <div class="wine-feature">
+            <span class="wf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 6.5a4 4 0 0 1-8 0L7 3Z"/><path d="M12 15v5"/><path d="M8 20h8"/></svg></span>
+            <div><h4>יינן מוסמך</h4><p>ליווי אישי והמלצות התאמה (Pairing) לכל מנה ולכל חיך.</p></div>
+          </div>
+          <div class="wine-feature">
+            <span class="wf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2h3v3l1 2.5V20a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2V7.5l1-2.5V2Z"/><path d="M9.5 12h5"/></svg></span>
+            <div><h4>מעל 120 תוויות</h4><p>אדומים, לבנים ומבעבעים — מהארץ ומהעולם, בכל טווח.</p></div>
+          </div>
+          <div class="wine-feature">
+            <span class="wf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.4 3.1L16.5 7l-2.2 2.4.5 3.3L12 11.9 9.2 12.7l.5-3.3L7.5 7l3.1-.9L12 3Z"/><path d="M6 20h12"/><path d="M12 16v4"/></svg></span>
+            <div><h4>יין בכוס — סדרת פרימיום</h4><p>מבחר פתוח שמתחלף מדי ערב, לטעימה ללא התחייבות לבקבוק.</p></div>
+          </div>
+        </div>
+        <p class="wine-note">"היין הנכון הופך ארוחה טובה לערב שלא שוכחים."</p>
+      </div>
+      <div class="wine-visual" role="img" aria-label="יין אדום נמזג לכוס"></div>
+    </div>
+  </section>
+
+  <!-- ===== RESERVATION ===== -->
+  <section class="section reserve" id="reserve">
+    <div class="container">
+      <div class="center">
+        <p class="eyebrow">שמרו מקום</p>
+        <h2 class="section-title">הזמנת שולחן</h2>
+        <p class="section-intro">מלאו את הפרטים ונשמח לארח אתכם. נחזור אליכם לאישור ההזמנה.</p>
+      </div>
+      <form class="reserve-card" id="reserve-form">
+        <div class="form-row">
+          <div class="field">
+            <label for="customerName">שם מלא</label>
+            <input type="text" id="customerName" name="customerName" placeholder="ישראל ישראלי" required>
+          </div>
+          <div class="field">
+            <label for="phone">טלפון</label>
+            <input type="tel" id="phone" name="phone" placeholder="050-0000000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="partySize">מספר סועדים</label>
+            <select id="partySize" name="partySize" required>
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="reservationTime">תאריך ושעה</label>
+            <input type="datetime-local" id="reservationTime" name="reservationTime" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-gold">אישור הזמנה</button>
+        <p class="form-note" id="reserve-note"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="center">
+        <p class="eyebrow">נשמח לראותכם</p>
+        <h2 class="section-title">צרו קשר</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+          <h3>כתובת</h3>
+          <p>רחוב הרצל 42<br>תל אביב</p>
+        </div>
+        <div class="contact-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>שעות פתיחה</h3>
+          <p>א׳–ה׳: 12:00–23:00<br>ו׳–שבת: 12:00–24:00</p>
+        </div>
+        <div class="contact-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2Z"/></svg></div>
+          <h3>טלפון</h3>
+          <p>03-1234567<br>info@ein-od.co.il</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <img class="footer-logo" src="/images/logo.jpg" alt="אין עוד מלבדו">
+      <p>מסעדה · אווירה · חוויה קולינרית</p>
+      <p class="small">© 2026 כל הזכויות שמורות · <a href="/admin.html">כניסת צוות</a></p>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/public.js"></script>
+</body>
+</html>
