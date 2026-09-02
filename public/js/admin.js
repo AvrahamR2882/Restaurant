@@ -271,10 +271,15 @@ document.querySelectorAll('#order-filters .chip').forEach((chip) => {
 async function loadOrders() {
   await guard(async () => {
     const q = state.orderFilter ? `?status=${state.orderFilter}` : '';
-    const [ordersRes, tablesRes, dishesRes] = await Promise.all([
-      API.get(`/orders${q}`), API.get('/tables'), API.get('/dishes'),
+    const [ordersRes, tablesRes] = await Promise.all([
+      API.get(`/orders${q}`), API.get('/tables'),
     ]);
-    state.dishesCache = dishesRes.data;
+
+    // התפריט כמעט לא משתנה תוך כדי משמרת — נטען פעם אחת ונשמר במטמון, כדי לא
+    // לבזבז בקשה בכל רענון של רשימת ההזמנות (לשונית התפריט מרעננת את המטמון).
+    if (!state.dishesCache.length) {
+      state.dishesCache = (await API.get('/dishes')).data;
+    }
 
     // ממלא את רשימת השולחנות התפוסים לפתיחת הזמנה
     const occupied = tablesRes.data.filter((t) => t.status === 'occupied');
