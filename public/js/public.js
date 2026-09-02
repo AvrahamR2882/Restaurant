@@ -3,10 +3,10 @@
 
 // שמות הקטגוריות בעברית + סדר התצוגה
 const CATEGORY_LABELS = {
-  starter: '🥗 ראשונות',
-  main: '🍽️ עיקריות',
-  dessert: '🍰 קינוחים',
-  drink: '🥤 שתייה',
+  starter: 'ראשונות, לחמים וגבינות',
+  main: 'מנות עיקריות',
+  dessert: 'קינוחים',
+  drink: 'תפריט היינות',
 };
 const CATEGORY_ORDER = ['starter', 'main', 'dessert', 'drink'];
 
@@ -18,7 +18,7 @@ async function loadMenu() {
     const dishes = res.data || [];
 
     if (!dishes.length) {
-      container.innerHTML = '<p class="menu-empty">התפריט מתעדכן — בקרוב כאן 🍴</p>';
+      container.innerHTML = '<p class="menu-empty">התפריט מתעדכן — בקרוב כאן.</p>';
       return;
     }
 
@@ -28,14 +28,16 @@ async function loadMenu() {
       (byCat[dish.category] = byCat[dish.category] || []).push(dish);
     }
 
-    // בניית עמודות לפי סדר הקטגוריות (רק קטגוריות שיש בהן מנות)
+    // כל קטגוריה = מקטע ברוחב מלא; המנות בתוכה מסודרות בשתי עמודות.
     container.innerHTML = CATEGORY_ORDER
       .filter((cat) => byCat[cat])
       .map((cat) => `
-        <div class="menu-cat">
+        <section class="menu-cat">
           <h3>${CATEGORY_LABELS[cat]}</h3>
-          ${byCat[cat].map(renderMenuItem).join('')}
-        </div>`)
+          <div class="menu-cat-items">
+            ${byCat[cat].map(renderMenuItem).join('')}
+          </div>
+        </section>`)
       .join('');
   } catch (err) {
     container.innerHTML = `<p class="menu-empty">לא ניתן לטעון את התפריט כרגע (${err.message})</p>`;
@@ -44,11 +46,18 @@ async function loadMenu() {
 
 function renderMenuItem(dish) {
   const cls = dish.available ? 'menu-item' : 'menu-item unavailable';
+  // התיאור אופציונלי — מנה בלי תיאור תוצג עם השם והמחיר בלבד.
+  const desc = dish.description
+    ? `<p class="mi-desc">${escapeHtml(dish.description)}</p>`
+    : '';
   return `
     <div class="${cls}">
-      <span class="mi-name">${escapeHtml(dish.name)}</span>
-      <span class="mi-dots"></span>
-      <span class="mi-price">₪${dish.price}</span>
+      <div class="mi-head">
+        <h4 class="mi-name">${escapeHtml(dish.name)}</h4>
+        <span class="mi-dots"></span>
+        <span class="mi-price">₪${dish.price}</span>
+      </div>
+      ${desc}
     </div>`;
 }
 

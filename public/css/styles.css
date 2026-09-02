@@ -140,22 +140,43 @@ h1, h2, h3, .serif { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; 
 
 /* ---------- Menu ---------- */
 .menu { background: var(--bg); }
-.menu-cats { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 60px; }
+/* כל קטגוריה = מקטע ברוחב מלא, זה מתחת לזה */
+.menu-cats { display: flex; flex-direction: column; gap: 58px; }
+
+/* כותרת קטגוריה — serif ממורכז עם קווי זהב נמוגים משני הצדדים */
 .menu-cat h3 {
-  font-size: 1.5rem; color: var(--gold-dark); padding-bottom: 12px; margin-bottom: 18px;
-  border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 10px;
+  font-family: 'Frank Ruhl Libre', serif; font-weight: 700; color: var(--ink);
+  font-size: clamp(1.45rem, 2.6vw, 1.95rem); letter-spacing: 0.01em;
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  margin-bottom: 32px;
 }
-.menu-item {
-  display: flex; align-items: baseline; gap: 12px; padding: 12px 0;
-  border-bottom: 1px dashed var(--border);
+.menu-cat h3::before, .menu-cat h3::after {
+  content: ''; height: 1px; flex: 1; max-width: 120px;
 }
-.menu-item:last-child { border-bottom: none; }
-.menu-item .mi-name { font-weight: 600; font-size: 1.05rem; white-space: nowrap; }
-.menu-item .mi-dots { flex: 1; border-bottom: 1px dotted var(--border); transform: translateY(-4px); }
-.menu-item .mi-price { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; color: var(--gold-dark); font-size: 1.1rem; }
+.menu-cat h3::before { background: linear-gradient(to left, transparent, var(--gold)); }
+.menu-cat h3::after { background: linear-gradient(to right, transparent, var(--gold)); }
+
+/* המנות בתוך הקטגוריה — שתי עמודות */
+.menu-cat-items { display: grid; grid-template-columns: 1fr 1fr; gap: 0 58px; }
+
+.menu-item { padding: 15px 0; border-bottom: 1px dashed var(--border); }
+.mi-head { display: flex; align-items: baseline; gap: 10px; }
+.mi-name {
+  font-family: 'Frank Ruhl Libre', serif; font-weight: 700; color: var(--ink);
+  font-size: 1.19rem; line-height: 1.35; margin: 0;
+}
+.mi-dots { flex: 1; min-width: 14px; border-bottom: 1px dotted var(--border); transform: translateY(-5px); }
+.mi-price {
+  font-family: 'Frank Ruhl Libre', serif; font-weight: 700;
+  color: var(--gold-dark); font-size: 1.12rem; white-space: nowrap;
+}
+.mi-desc {
+  margin-top: 6px; font-size: 0.9rem; font-weight: 300; line-height: 1.72;
+  color: var(--muted); max-width: 58ch;
+}
 .menu-item.unavailable { opacity: 0.45; }
 .menu-item.unavailable .mi-name::after { content: ' • אזל'; font-size: 0.75rem; color: var(--wine); }
-.menu-empty, .menu-loading { color: var(--muted); padding: 20px 0; grid-column: 1 / -1; text-align: center; }
+.menu-empty, .menu-loading { color: var(--muted); padding: 20px 0; text-align: center; }
 
 /* ---------- Reservation ---------- */
 .reserve { background: var(--cream); color: var(--ink); }
@@ -248,7 +269,8 @@ h1, h2, h3, .serif { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; 
 
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
-  .about-grid, .menu-cats, .wine-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-grid, .wine-grid { grid-template-columns: 1fr; gap: 40px; }
+  .menu-cat-items { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .about-plate { max-width: 320px; margin: 0 auto; }
   .wine-visual { max-width: 300px; margin: 0 auto; order: -1; }

@@ -24,6 +24,10 @@ module.exports = (sequelize) => {
           notEmpty: { msg: 'Dish name cannot be empty' },
         },
       },
+      description: {
+        type: DataTypes.TEXT, // תיאור המנה שמוצג בתפריט מתחת לשם
+        allowNull: true,
+      },
       price: {
         type: DataTypes.FLOAT,
         allowNull: false,

@@ -102,7 +102,7 @@ async function loadDishes() {
       <div class="row">
         <div class="r-main">
           <div class="r-title">${esc(d.name)}</div>
-          <div class="r-sub">${CAT_HE[d.category]}</div>
+          <div class="r-sub">${CAT_HE[d.category]}${d.description ? ' · ' + esc(d.description) : ''}</div>
         </div>
         <span class="price">₪${d.price}</span>
         ${isManager ? `<button class="btn btn-danger btn-sm" data-del-dish="${d.id}">מחק</button>` : ''}
@@ -112,11 +112,12 @@ async function loadDishes() {
 $('dish-add').addEventListener('click', () => guard(async () => {
   const body = {
     name: $('dish-name').value.trim(),
+    description: $('dish-description').value.trim() || null,
     price: parseFloat($('dish-price').value),
     category: $('dish-category').value,
   };
   await API.post('/dishes', body);
-  $('dish-name').value = ''; $('dish-price').value = '';
+  $('dish-name').value = ''; $('dish-price').value = ''; $('dish-description').value = '';
   toast('המנה נוספה ✅', 'success');
   loadDishes();
 }));

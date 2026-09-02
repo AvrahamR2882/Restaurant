@@ -11,7 +11,8 @@ exports.getAllDishes = asyncHandler(async (req, res) => {
   const where = {};
   if (req.query.category) where.category = req.query.category;
 
-  const dishes = await Dish.findAll({ where, order: [['category', 'ASC'], ['name', 'ASC']] });
+  // ממוין לפי id — כך נשמר סדר התפריט המקורי (סדר ההזנה), כמו בתפריט מודפס.
+  const dishes = await Dish.findAll({ where, order: [['id', 'ASC']] });
   res.status(200).json({ success: true, count: dishes.length, data: dishes });
 });
 
@@ -25,10 +26,10 @@ exports.getDishById = asyncHandler(async (req, res) => {
 
 // POST /api/dishes  — יצירת מנה (manager בלבד — ההרשאה תיאכף בשלב 5)
 exports.createDish = asyncHandler(async (req, res) => {
-  const { name, price, category, available } = req.body;
+  const { name, description, price, category, available } = req.body;
 
   // הוולידציות המלאות ברמת ה-ORM ירוצו ב-create ויחזירו 400/409 דרך ה-errorHandler.
-  const dish = await Dish.create({ name, price, category, available });
+  const dish = await Dish.create({ name, description, price, category, available });
   res.status(201).json({ success: true, data: dish });
 });
 
@@ -39,7 +40,7 @@ exports.updateDish = asyncHandler(async (req, res) => {
 
   // בונים אובייקט עדכון רק מהשדות שנשלחו בפועל — כדי לא לדרוס ערכים קיימים ב-undefined.
   const updates = {};
-  for (const field of ['name', 'price', 'category', 'available']) {
+  for (const field of ['name', 'description', 'price', 'category', 'available']) {
     if (req.body[field] !== undefined) updates[field] = req.body[field];
   }
 
