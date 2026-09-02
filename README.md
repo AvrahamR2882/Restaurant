@@ -8,7 +8,7 @@
 ## ✨ תכונות עיקריות
 
 - **ארכיטקטורת MVC** מלאה — הפרדה נקייה ל-`models`, `controllers`, `routes`, `middlewares`.
-- **בסיס נתונים** עם Sequelize ORM (SQLite) — 7 מודלים מקושרים עם מפתחות זרים וולידציות.
+- **בסיס נתונים** עם Sequelize ORM (SQLite) — 8 מודלים מקושרים עם מפתחות זרים וולידציות.
 - **אימות והרשאות (JWT)** — שני תפקידים: `manager` (מנהל) ו-`waiter` (מלצר).
 - **הצפנת סיסמאות** עם bcrypt — הסיסמה עצמה לעולם לא נשמרת.
 - **טיפול שגיאות מרוכז** — סטטוסי HTTP מדויקים (2XX/4XX/5XX), השרת לא קורס.
@@ -25,7 +25,7 @@
 restaurant-server/
 ├── server.js              # נקודת כניסה — middleware, נתיבים, static, הרמת שרת
 ├── config/database.js     # חיבור Sequelize ל-SQLite
-├── models/                # 7 מודלים + הגדרת הקשרים (index.js)
+├── models/                # 8 מודלים + הגדרת הקשרים (index.js)
 ├── controllers/           # הלוגיקה העסקית לכל ישות
 ├── routes/                # הגדרת ה-endpoints
 ├── middlewares/           # אימות, הרשאות, rate limiting, טיפול שגיאות
