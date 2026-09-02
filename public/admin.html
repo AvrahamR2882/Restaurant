@@ -21,6 +21,7 @@
     <symbol id="i-order" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4V3.5Z"/><path d="M9 8h6M9 12h5"/></symbol>
     <symbol id="i-staff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5a5.5 5.5 0 0 1 11 0"/><path d="M16 6.9a3 3 0 0 1 0 5.2"/><path d="M17.5 15.4a5.5 5.5 0 0 1 3 4.1"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-stats" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20h17"/><path d="M7 20v-6M12 20v-11M17 20v-8"/></symbol>
     <symbol id="i-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2l4 10-4 10-4-10 4-10Z"/></symbol>
   </svg>
 
@@ -62,6 +63,7 @@
       <button class="tab" data-tab="reservations"><svg><use href="#i-reservation"/></svg> הזמנות שולחן</button>
       <button class="tab" data-tab="orders"><svg><use href="#i-order"/></svg> הזמנות</button>
       <button class="tab manager-only" data-tab="staff"><svg><use href="#i-staff"/></svg> צוות</button>
+      <button class="tab manager-only" data-tab="stats"><svg><use href="#i-stats"/></svg> מאזן</button>
     </nav>
 
     <main class="main">
@@ -173,6 +175,17 @@
             <div class="list" id="staff-list"><p class="loading">טוען...</p></div>
           </div>
         </div>
+      </section>
+
+      <!-- STATS / BALANCE -->
+      <section class="panel manager-only" id="panel-stats">
+        <div class="panel-head">
+          <h2>מאזן וסטטיסטיקה</h2>
+          <span class="spacer"></span>
+          <button class="btn btn-ghost btn-sm" id="stats-refresh">רענן</button>
+          <button class="btn btn-danger btn-sm" id="day-close">סגירת יום</button>
+        </div>
+        <div id="stats-body"><p class="loading">טוען...</p></div>
       </section>
 
     </main>

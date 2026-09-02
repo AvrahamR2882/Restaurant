@@ -19,6 +19,7 @@ const tableRoutes = require('./routes/table.routes');
 const customerRoutes = require('./routes/customer.routes');
 const reservationRoutes = require('./routes/reservation.routes');
 const orderRoutes = require('./routes/order.routes');
+const statsRoutes = require('./routes/stats.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +49,7 @@ app.use('/api/tables', tableRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/stats', statsRoutes);
 
 // ---- טיפול בשגיאות (חייב לבוא אחרון, אחרי כל הנתיבים) ----
 app.use(notFound);      // נתיב לא קיים → 404

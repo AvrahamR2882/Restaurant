@@ -34,7 +34,7 @@ exports.createReservation = asyncHandler(async (req, res) => {
 
 // GET /api/reservations — רשימה, עם פילטר אופציונלי ?status=
 exports.getAllReservations = asyncHandler(async (req, res) => {
-  const where = {};
+  const where = { dayClosureId: null }; // רק הזמנות פעילות; מה שאורכב לא מוצג
   if (req.query.status) where.status = req.query.status;
   const reservations = await Reservation.findAll({
     where,

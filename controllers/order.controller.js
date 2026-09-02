@@ -27,6 +27,10 @@ exports.getAllOrders = asyncHandler(async (req, res) => {
   if (req.query.status) where.status = req.query.status;
   if (req.query.tableId) where.tableId = req.query.tableId;
 
+  // כברירת מחדל מוצגות רק הזמנות מהמשמרת הנוכחית (שעדיין לא אורכבו בסגירת יום).
+  // לצפייה בארכיון של יום שנסגר: ?closureId=N
+  where.dayClosureId = req.query.closureId || null;
+
   const orders = await Order.findAll({
     where,
     include: ORDER_INCLUDE,

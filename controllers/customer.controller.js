@@ -6,7 +6,12 @@ const { AppError, asyncHandler } = require('../middlewares/errorHandler');
 
 // GET /api/customers — כל הלקוחות, כולל השולחן שלהם
 exports.getAllCustomers = asyncHandler(async (req, res) => {
-  const customers = await Customer.findAll({ include: [Table], order: [['id', 'ASC']] });
+  // רק לקוחות מהמשמרת הנוכחית — לקוחות שאורכבו בסגירת יום לא מוצגים.
+  const customers = await Customer.findAll({
+    where: { dayClosureId: null },
+    include: [Table],
+    order: [['id', 'ASC']],
+  });
   res.status(200).json({ success: true, count: customers.length, data: customers });
 });
 

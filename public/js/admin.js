@@ -76,7 +76,7 @@ $('logout-btn').addEventListener('click', () => { API.clearToken(); showLogin();
 // ============================================================
 const LOADERS = {
   dishes: loadDishes, tables: loadTables, customers: loadCustomers,
-  reservations: loadReservations, orders: loadOrders, staff: loadStaff,
+  reservations: loadReservations, orders: loadOrders, staff: loadStaff, stats: loadStats,
 };
 document.querySelectorAll('.tab').forEach((tab) => {
   tab.addEventListener('click', () => {
@@ -393,6 +393,114 @@ $('staff-add').addEventListener('click', () => guard(async () => {
 $('staff-list').addEventListener('click', (e) => {
   const id = e.target.dataset.delUser;
   if (id) guard(async () => { await API.del(`/auth/users/${id}`); toast('העובד נמחק'); loadStaff(); });
+});
+
+// ============================================================
+//  מאזן, סטטיסטיקה וסגירת יום — מנהל בלבד
+// ============================================================
+const CAT_FULL = { starter: 'ראשונות', main: 'עיקריות', dessert: 'קינוחים', drink: 'שתייה', other: 'אחר' };
+const money = (n) => '₪' + Number(n || 0).toLocaleString('he-IL');
+
+// שורת גרף: תווית, מילוי יחסי, וערך מוצג
+function bar(label, value, max, valueText) {
+  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+  return `
+    <div class="bar-row">
+      <div class="bar-head"><span>${label}</span><span class="bh-val">${valueText}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+}
+
+async function loadStats() {
+  await guard(async () => {
+    const d = (await API.get('/stats')).data;
+    const maxDish = Math.max(1, ...d.topDishes.map((x) => x.quantity));
+    const maxCat = Math.max(1, ...d.byCategory.map((x) => x.revenue));
+    const t = d.current.tables;
+
+    $('stats-body').innerHTML = `
+      <div class="kpis">
+        <div class="kpi">
+          <span class="k-label">הכנסות המשמרת</span>
+          <b class="k-val gold">${money(d.current.revenue)}</b>
+          <span class="k-sub">${d.current.closedOrders} חשבונות נסגרו</span>
+        </div>
+        <div class="kpi">
+          <span class="k-label">חשבונות פתוחים</span>
+          <b class="k-val">${d.current.openOrders}</b>
+          <span class="k-sub">בשווי ${money(d.current.openOrdersValue)}</span>
+        </div>
+        <div class="kpi">
+          <span class="k-label">לקוחות יושבים</span>
+          <b class="k-val">${d.current.seatedCustomers}</b>
+          <span class="k-sub">${t.occupied}/${t.total} שולחנות תפוסים</span>
+        </div>
+        <div class="kpi">
+          <span class="k-label">הזמנות ממתינות</span>
+          <b class="k-val">${d.current.pendingReservations}</b>
+          <span class="k-sub">להושבה</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="card">
+          <h3>סיכום כללי (כל הזמן)</h3>
+          <div class="kv"><span>סך ההכנסות</span><b>${money(d.allTime.revenue)}</b></div>
+          <div class="kv"><span>חשבונות שנסגרו</span><b>${d.allTime.orders}</b></div>
+          <div class="kv"><span>ממוצע לחשבון</span><b>${money(d.allTime.avgOrder)}</b></div>
+          <div class="kv"><span>ימים שנסגרו</span><b>${d.allTime.daysClosed}</b></div>
+        </div>
+        <div class="card">
+          <h3>מצב שולחנות</h3>
+          ${bar('פנויים', t.free, t.total, t.free)}
+          ${bar('מוזמנים', t.reserved, t.total, t.reserved)}
+          ${bar('תפוסים', t.occupied, t.total, t.occupied)}
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="card">
+          <h3>מנות מובילות</h3>
+          ${d.topDishes.length
+            ? d.topDishes.map((x) => bar(esc(x.name), x.quantity, maxDish, `${x.quantity} · ${money(x.revenue)}`)).join('')
+            : '<p class="r-sub">אין עדיין נתוני מכירות.</p>'}
+        </div>
+        <div class="card">
+          <h3>פילוח לפי קטגוריה</h3>
+          ${d.byCategory.length
+            ? d.byCategory.map((x) => bar(CAT_FULL[x.category] || x.category, x.revenue, maxCat, money(x.revenue))).join('')
+            : '<p class="r-sub">אין עדיין נתוני מכירות.</p>'}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>ארכיון ימים שנסגרו</h3>
+        ${d.recentClosures.length
+          ? d.recentClosures.map((c) => `
+              <div class="kv">
+                <span>${new Date(c.closedAt).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' })}
+                  · ${c.ordersCount} חשבונות · ${c.itemsCount} מנות${c.closedBy ? ' · ' + esc(c.closedBy) : ''}</span>
+                <b>${money(c.revenue)}</b>
+              </div>`).join('')
+          : '<p class="r-sub">עדיין לא בוצעה סגירת יום.</p>'}
+      </div>`;
+  });
+}
+
+$('stats-refresh').addEventListener('click', loadStats);
+
+$('day-close').addEventListener('click', () => {
+  const ok = confirm(
+    'לסגור את יום העסקים?\n\n' +
+    'כל החשבונות והלקוחות יועברו לארכיון, השולחנות ישוחררו והדשבורד יתרוקן.\n' +
+    'הנתונים יישמרו במלואם וימשיכו להופיע במאזן.'
+  );
+  if (!ok) return;
+  guard(async () => {
+    const r = await API.post('/stats/close-day', {});
+    toast(r.message, 'success');
+    loadStats();
+  });
 });
 
 // ---------- אתחול ----------

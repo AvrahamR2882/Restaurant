@@ -15,6 +15,7 @@ const Customer = require('./customer.model')(sequelize);
 const Reservation = require('./reservation.model')(sequelize);
 const Order = require('./order.model')(sequelize);
 const OrderItem = require('./orderItem.model')(sequelize);
+const DayClosure = require('./dayClosure.model')(sequelize);
 
 // ---- הגדרת קשרים (associations) ----
 // כל hasMany/belongsTo מוסיף אוטומטית מפתח זר (foreignKey) לטבלה המתאימה.
@@ -43,6 +44,17 @@ OrderItem.belongsTo(Order, { foreignKey: 'orderId' });
 Dish.hasMany(OrderItem, { foreignKey: 'dishId' });
 OrderItem.belongsTo(Dish, { foreignKey: 'dishId' });
 
+// סגירת יום ↔ הרשומות שאורכבו בה.
+// dayClosureId = null פירושו "עדיין פעיל, מוצג בדשבורד".
+DayClosure.hasMany(Order, { foreignKey: 'dayClosureId', onDelete: 'SET NULL' });
+Order.belongsTo(DayClosure, { foreignKey: 'dayClosureId' });
+
+DayClosure.hasMany(Customer, { foreignKey: 'dayClosureId', onDelete: 'SET NULL' });
+Customer.belongsTo(DayClosure, { foreignKey: 'dayClosureId' });
+
+DayClosure.hasMany(Reservation, { foreignKey: 'dayClosureId', onDelete: 'SET NULL' });
+Reservation.belongsTo(DayClosure, { foreignKey: 'dayClosureId' });
+
 // ---- ייצוא ----
 const db = {
   sequelize,
@@ -53,6 +65,7 @@ const db = {
   Reservation,
   Order,
   OrderItem,
+  DayClosure,
 };
 
 module.exports = db;
