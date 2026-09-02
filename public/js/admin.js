@@ -212,11 +212,17 @@ $('customers-list').addEventListener('click', (e) => {
 // ============================================================
 async function loadReservations() {
   await guard(async () => {
-    const res = await API.get('/reservations');
+    const [res, tablesRes] = await Promise.all([API.get('/reservations'), API.get('/tables')]);
+    // שולחנות שאפשר להושיב בהם — כל מה שאינו תפוס
+    const seatable = tablesRes.data.filter((t) => t.status !== 'occupied');
+
     const el = $('reservations-list');
     if (!res.data.length) { el.innerHTML = '<div class="empty"><span class="ic"><svg><use href="#i-reservation"/></svg></span>אין הזמנות שולחן</div>'; return; }
     el.innerHTML = res.data.map((r) => {
       const when = new Date(r.reservationTime).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' });
+      const tableOptions = seatable
+        .map((t) => `<option value="${t.id}" ${r.tableId === t.id ? 'selected' : ''}>שולחן ${t.number} · ${t.seats} מק׳</option>`)
+        .join('');
       return `
       <div class="row">
         <div class="r-main">
@@ -224,7 +230,12 @@ async function loadReservations() {
           <div class="r-sub">${esc(r.phone) || '—'} · ${r.partySize} סועדים · ${when}${r.Table ? ' · שולחן ' + r.Table.number : ''}</div>
         </div>
         <div class="r-actions">
-          ${r.status === 'pending' ? `<button class="btn btn-green btn-sm" data-seat-res="${r.id}">סמן כהושבה</button>` : ''}
+          ${r.status === 'pending' ? `
+            <select data-table-for="${r.id}" style="width:auto;padding:6px 10px;font-size:.82rem">
+              <option value="">שולחן: אוטומטי</option>
+              ${tableOptions}
+            </select>
+            <button class="btn btn-green btn-sm" data-seat-res="${r.id}">הושב</button>` : ''}
           <button class="btn btn-danger btn-sm" data-del-res="${r.id}">בטל</button>
         </div>
       </div>`;
@@ -234,7 +245,14 @@ async function loadReservations() {
 $('reservations-list').addEventListener('click', (e) => {
   const seatId = e.target.dataset.seatRes;
   const delId = e.target.dataset.delRes;
-  if (seatId) guard(async () => { await API.patch(`/reservations/${seatId}`, { status: 'seated' }); toast('סומן כהושבה'); loadReservations(); });
+  if (seatId) guard(async () => {
+    // אם נבחר שולחן ספציפי נשלח אותו; אחרת השרת יבחר אוטומטית לפי מספר הסועדים.
+    const sel = document.querySelector(`[data-table-for="${seatId}"]`);
+    const body = sel && sel.value ? { tableId: parseInt(sel.value, 10) } : {};
+    const r = await API.post(`/reservations/${seatId}/seat`, body);
+    toast(r.message || 'הלקוח הושב', 'success');
+    loadReservations();
+  });
   if (delId) guard(async () => { await API.del(`/reservations/${delId}`); toast('ההזמנה בוטלה'); loadReservations(); });
 });
 

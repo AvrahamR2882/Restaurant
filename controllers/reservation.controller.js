@@ -1,7 +1,8 @@
 // controllers/reservation.controller.js
 // ניהול הזמנות שולחן (reservations). היצירה ציבורית — לקוח מזמין מהאתר.
 
-const { Reservation, Table } = require('../models');
+const { Op } = require('sequelize');
+const { Reservation, Table, Customer } = require('../models');
 const { AppError, asyncHandler } = require('../middlewares/errorHandler');
 
 // POST /api/reservations — יצירת הזמנת שולחן (ציבורי)
@@ -55,6 +56,12 @@ exports.updateReservation = asyncHandler(async (req, res) => {
   const reservation = await Reservation.findByPk(req.params.id);
   if (!reservation) throw new AppError(404, `Reservation with id ${req.params.id} not found`);
 
+  // "הושבה" היא פעולה עם תופעות לוואי (שיבוץ שולחן + יצירת לקוח), ולכן היא לא
+  // מתבצעת דרך עדכון סטטוס סתמי — אחרת ההזמנה תסומן כהושבה בלי שאף שולחן ייתפס.
+  if (req.body.status === 'seated' && reservation.status !== 'seated') {
+    throw new AppError(400, 'Use POST /api/reservations/:id/seat to seat a reservation');
+  }
+
   const updates = {};
   for (const field of ['customerName', 'phone', 'partySize', 'reservationTime', 'status', 'tableId']) {
     if (req.body[field] !== undefined) updates[field] = req.body[field];
@@ -62,6 +69,56 @@ exports.updateReservation = asyncHandler(async (req, res) => {
 
   await reservation.update(updates);
   res.status(200).json({ success: true, data: reservation });
+});
+
+// POST /api/reservations/:id/seat — הושבת ההזמנה בפועל.
+// זו הפעולה שסוגרת את הלולאה: בוחרת שולחן, יוצרת לקוח יושב, מסמנת את השולחן
+// כתפוס ומעדכנת את ההזמנה — ורק אז אפשר לפתוח לשולחן הזמנת אוכל.
+exports.seatReservation = asyncHandler(async (req, res) => {
+  const reservation = await Reservation.findByPk(req.params.id);
+  if (!reservation) throw new AppError(404, `Reservation with id ${req.params.id} not found`);
+  if (reservation.status !== 'pending') {
+    throw new AppError(409, `Reservation is already ${reservation.status}`);
+  }
+
+  // בחירת השולחן: מהבקשה → מהשיוך שנקבע בהזמנה → אוטומטית לפי מספר הסועדים.
+  const requestedTableId = req.body.tableId || reservation.tableId;
+  let table;
+
+  if (requestedTableId) {
+    table = await Table.findByPk(requestedTableId);
+    if (!table) throw new AppError(404, `Table with id ${requestedTableId} not found`);
+    if (table.status === 'occupied') {
+      throw new AppError(409, `Table ${table.number} is already occupied`);
+    }
+  } else {
+    // השולחן הפנוי הקטן ביותר שמכיל את כל הסועדים; אם אין כזה — כל שולחן פנוי.
+    table =
+      (await Table.findOne({
+        where: { status: 'free', seats: { [Op.gte]: reservation.partySize } },
+        order: [['seats', 'ASC']],
+      })) ||
+      (await Table.findOne({ where: { status: 'free' }, order: [['number', 'ASC']] }));
+
+    if (!table) throw new AppError(409, 'No free table available');
+  }
+
+  // הלקוח היושב נוצר מפרטי ההזמנה — הוא זה שמקשר בין ההזמנה לשולחן.
+  const customer = await Customer.create({
+    name: reservation.customerName,
+    phone: reservation.phone,
+    tableId: table.id,
+  });
+
+  await table.update({ status: 'occupied' });
+  await reservation.update({ status: 'seated', tableId: table.id });
+
+  const result = await Reservation.findByPk(reservation.id, { include: [Table] });
+  res.status(200).json({
+    success: true,
+    message: `הלקוח הושב בשולחן ${table.number}`,
+    data: { reservation: result, customer, table },
+  });
 });
 
 // DELETE /api/reservations/:id — ביטול הזמנה, ושחרור השולחן אם היה מוזמן

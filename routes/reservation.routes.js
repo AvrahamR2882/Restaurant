@@ -13,6 +13,7 @@ router.post('/', reservationController.createReservation);
 router.get('/', verifyToken, reservationController.getAllReservations);
 router.get('/:id', verifyToken, reservationController.getReservationById);
 router.patch('/:id', verifyToken, reservationController.updateReservation);
+router.post('/:id/seat', verifyToken, reservationController.seatReservation); // הושבה בפועל
 router.delete('/:id', verifyToken, reservationController.deleteReservation);
 
 module.exports = router;
