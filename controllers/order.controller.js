@@ -62,7 +62,23 @@ exports.createOrder = asyncHandler(async (req, res) => {
     throw new AppError(409, 'This table already has an open order');
   }
 
-  const order = await Order.create({ tableId, customerId: customerId || null });
+  // קישור הלקוח להזמנה. אם נשלח מזהה מפורש — משתמשים בו; אחרת מאתרים אוטומטית
+  // את הלקוח שיושב בשולחן. הלקוח הזה נוצר בשיבוץ ידני או בהושבת הזמנת שולחן,
+  // ולכן אין צורך שהממשק ישלח אותו — השרת גוזר אותו ממצב השולחן.
+  let resolvedCustomerId = null;
+  if (customerId) {
+    const customer = await Customer.findByPk(customerId);
+    if (!customer) throw new AppError(404, `Customer with id ${customerId} not found`);
+    resolvedCustomerId = customer.id;
+  } else {
+    const seated = await Customer.findOne({
+      where: { tableId, dayClosureId: null }, // רק לקוח מהמשמרת הנוכחית
+      order: [['id', 'DESC']], // האחרון שהושב בשולחן
+    });
+    if (seated) resolvedCustomerId = seated.id;
+  }
+
+  const order = await Order.create({ tableId, customerId: resolvedCustomerId });
   const full = await Order.findByPk(order.id, { include: ORDER_INCLUDE });
   res.status(201).json({ success: true, data: withTotal(full) });
 });
