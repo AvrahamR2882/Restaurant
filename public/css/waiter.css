@@ -14,13 +14,15 @@
   --gold: #B4812C;
   --gold-dark: #855A18;
 
-  --free: #2E7D53;
-  --free-bg: #E4F1E8;
-  --free-line: #9FCDB4;
+  /* קודי צבע לשולחנות — כולם מפלטת המותג, בשלושה גוונים מובחנים:
+     פנוי = זהב (מזמין) · תפוס = יין (בשימוש) · מוזמן = כחול־פלדה (שמור) */
+  --free: #8C6120;
+  --free-bg: #FAF0D9;
+  --free-line: #D4AE63;
 
-  --occupied: #855A18;
-  --occupied-bg: #F7EBD3;
-  --occupied-line: #DDBE7E;
+  --occupied: #7A3B2E;
+  --occupied-bg: #F6E7E1;
+  --occupied-line: #CFA294;
 
   --reserved: #3B6FB5;
   --reserved-bg: #E6EDF8;
