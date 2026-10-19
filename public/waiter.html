@@ -45,6 +45,7 @@
       <h2>שולחנות</h2>
       <span class="spacer"></span>
       <span class="who" id="who"></span>
+      <button class="icon-btn" id="open-res" aria-label="הזמנות שולחן">📅<span class="badge-count hidden" id="res-count">0</span></button>
       <button class="icon-btn" id="refresh" aria-label="רענן">⟳</button>
       <button class="icon-btn" id="logout" aria-label="יציאה">⏻</button>
     </div>
@@ -87,6 +88,19 @@
     <div class="main">
       <div class="cats" id="cats"></div>
       <div class="dishes" id="dishes"></div>
+    </div>
+  </div>
+
+  <!-- ===== הזמנות שולחן ממתינות ===== -->
+  <div id="res-view" class="hidden">
+    <div class="topbar">
+      <button class="icon-btn" id="back-from-res" aria-label="חזרה">→</button>
+      <h2>הזמנות ממתינות</h2>
+      <span class="spacer"></span>
+      <span class="who" id="res-sub"></span>
+    </div>
+    <div class="main">
+      <div class="res-list" id="res-list"></div>
     </div>
   </div>
 

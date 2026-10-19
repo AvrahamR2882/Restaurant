@@ -1,28 +1,37 @@
 /* ============================================================
    מסך מלצר — מותאם לאייפד ולמגע
+   פלטה בהירה מספר המותג: חול חם, קרם, זהב ואספרסו.
    עקרונות: יעדי מגע 56px+, מסך אחד בכל רגע, מינימום הקלדה.
    ============================================================ */
 
 :root {
-  --bg: #16120C;
-  --surface: #221B13;
-  --surface-2: #2E251A;
-  --line: #3D3124;
-  --fg: #F2EADC;
-  --muted: #A89880;
-  --gold: #C9A24A;
-  --gold-dark: #8C6120;
+  --bg: #EDE0C6;          /* חול חם */
+  --surface: #FAF4E9;     /* קרם */
+  --surface-2: #F1E7D4;
+  --line: #D6C39D;
+  --fg: #201607;          /* אספרסו */
+  --muted: #6B5940;
+  --gold: #B4812C;
+  --gold-dark: #855A18;
 
-  --free: #4FA87A;
-  --free-bg: #17301F;
-  --occupied: #C9A24A;
-  --occupied-bg: #332713;
-  --reserved: #5B85C4;
-  --reserved-bg: #1A2435;
-  --danger: #C9584B;
+  --free: #2E7D53;
+  --free-bg: #E4F1E8;
+  --free-line: #9FCDB4;
+
+  --occupied: #855A18;
+  --occupied-bg: #F7EBD3;
+  --occupied-line: #DDBE7E;
+
+  --reserved: #3B6FB5;
+  --reserved-bg: #E6EDF8;
+  --reserved-line: #A8C0E2;
+
+  --danger: #B0433A;
+  --danger-bg: #F8E7E5;
 
   --radius: 16px;
   --tap: 56px;
+  --shadow: 0 1px 2px rgba(80,55,15,.06), 0 6px 18px rgba(80,55,15,.08);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -33,8 +42,8 @@ body {
   font-family: 'Heebo', system-ui, -apple-system, sans-serif;
   font-size: 17px; line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overscroll-behavior: none;              /* בלי "גומי" בגלילה */
-  user-select: none;                       /* לחיצה ארוכה לא בוחרת טקסט */
+  overscroll-behavior: none;
+  user-select: none;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -46,45 +55,54 @@ body {
   min-height: var(--tap); padding: 0 24px; border: none; border-radius: 12px;
   font-family: inherit; font-size: 1.05rem; font-weight: 600; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  transition: transform .08s, filter .15s;
+  transition: transform .08s, filter .15s; text-decoration: none;
 }
 .btn:active { transform: scale(.97); }
-.btn-gold { background: var(--gold); color: #1A1308; }
-.btn-ghost { background: transparent; color: var(--fg); border: 1.5px solid var(--line); }
-.btn-danger { background: var(--danger); color: #fff; }
-.btn-green { background: var(--free); color: #08160E; }
+.btn-gold { background: var(--gold); color: #fff; }
+.btn-ghost { background: var(--surface); color: var(--fg); border: 1.5px solid var(--line); }
+.btn-danger { background: var(--danger-bg); color: var(--danger); border: 1.5px solid var(--danger); }
+.btn-green { background: var(--free); color: #fff; }
+.btn-blue { background: var(--reserved); color: #fff; }
 .btn-full { width: 100%; }
-.btn:disabled { opacity: .4; }
+.btn:disabled { opacity: .45; }
 
 /* ---------- התחברות ---------- */
 #login-view { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px; }
-.login-card { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 36px 30px; }
+.login-card {
+  width: 100%; max-width: 420px; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 22px; padding: 36px 30px; box-shadow: var(--shadow);
+}
 .login-card h1 { font-family: 'Frank Ruhl Libre', serif; font-size: 1.7rem; text-align: center; margin-bottom: 4px; }
 .login-card .sub { text-align: center; color: var(--muted); font-size: .95rem; margin-bottom: 28px; }
 .field { margin-bottom: 16px; }
 .field label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 7px; }
-.field input {
-  width: 100%; min-height: var(--tap); background: var(--surface-2); border: 1px solid var(--line);
+.field input, .field select {
+  width: 100%; min-height: var(--tap); background: var(--bg); border: 1px solid var(--line);
   border-radius: 12px; padding: 0 16px; color: var(--fg); font-family: inherit; font-size: 1.05rem; outline: none;
 }
-.field input:focus { border-color: var(--gold); }
+.field input:focus, .field select:focus { border-color: var(--gold); }
 #login-note { text-align: center; color: var(--danger); font-size: .9rem; min-height: 1.3em; margin-top: 12px; }
 
 /* ---------- סרגל עליון ---------- */
 .topbar {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
   background: var(--surface); border-bottom: 1px solid var(--line);
-  display: flex; align-items: center; gap: 12px; padding: 10px 16px; min-height: 64px;
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px; min-height: 64px;
 }
 .topbar h2 { font-family: 'Frank Ruhl Libre', serif; font-size: 1.3rem; font-weight: 700; }
 .topbar .spacer { margin-inline-start: auto; }
 .topbar .who { font-size: .85rem; color: var(--muted); }
 .icon-btn {
   min-width: 48px; min-height: 48px; border-radius: 12px; border: 1px solid var(--line);
-  background: transparent; color: var(--fg); font-size: 1.3rem; cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--bg); color: var(--fg); font-size: 1.25rem; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; position: relative;
 }
 .icon-btn:active { background: var(--surface-2); }
+.badge-count {
+  position: absolute; top: -6px; inset-inline-start: -6px; min-width: 22px; height: 22px;
+  border-radius: 50px; background: var(--danger); color: #fff;
+  font-size: .72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 5px;
+}
 
 .main { padding: 18px 16px 32px; }
 
@@ -93,38 +111,36 @@ body {
 .legend span { display: inline-flex; align-items: center; gap: 7px; }
 .legend i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
 
-.floor { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+.floor { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 14px; }
 .tcard {
   background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius);
-  padding: 18px 16px; min-height: 132px; cursor: pointer; text-align: start;
-  display: flex; flex-direction: column; gap: 4px; transition: transform .08s;
-  color: var(--fg); font-family: inherit;
+  padding: 16px; min-height: 140px; cursor: pointer; text-align: start;
+  display: flex; flex-direction: column; gap: 3px; transition: transform .08s;
+  color: var(--fg); font-family: inherit; box-shadow: var(--shadow);
 }
 .tcard:active { transform: scale(.97); }
 .tcard .tnum { font-family: 'Frank Ruhl Libre', serif; font-size: 2.1rem; font-weight: 700; line-height: 1; }
 .tcard .tseats { font-size: .82rem; color: var(--muted); }
-.tcard .tstatus { margin-top: auto; font-size: .85rem; font-weight: 600; }
-.tcard .ttotal { font-family: 'Frank Ruhl Libre', serif; font-size: 1.25rem; font-weight: 700; }
+.tcard .tstatus { margin-top: auto; font-size: .85rem; font-weight: 700; }
+.tcard .ttotal { font-family: 'Frank Ruhl Libre', serif; font-size: 1.3rem; font-weight: 700; }
+.tcard .tnote { font-size: .78rem; font-weight: 600; }
 
-.tcard.free { border-color: var(--free); background: var(--free-bg); }
+.tcard.free { border-color: var(--free-line); background: var(--free-bg); }
 .tcard.free .tstatus { color: var(--free); }
-.tcard.occupied { border-color: var(--occupied); background: var(--occupied-bg); }
-.tcard.occupied .tstatus, .tcard.occupied .ttotal { color: var(--occupied); }
-.tcard.reserved { border-color: var(--reserved); background: var(--reserved-bg); }
-.tcard.reserved .tstatus { color: var(--reserved); }
+.tcard.occupied { border-color: var(--occupied-line); background: var(--occupied-bg); }
+.tcard.occupied .tstatus, .tcard.occupied .ttotal, .tcard.occupied .tnote { color: var(--occupied); }
+.tcard.reserved { border-color: var(--reserved-line); background: var(--reserved-bg); }
+.tcard.reserved .tstatus, .tcard.reserved .tnote { color: var(--reserved); }
 
 /* ---------- מסך חשבון ---------- */
-.bill { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.bill { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 .bill-empty { padding: 44px 20px; text-align: center; color: var(--muted); }
-.bill-row {
-  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-  border-bottom: 1px solid var(--line);
-}
+.bill-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
 .bill-row:last-child { border-bottom: none; }
 .bill-row .q {
   min-width: 42px; height: 42px; border-radius: 10px; background: var(--surface-2);
   display: inline-flex; align-items: center; justify-content: center;
-  font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 1.1rem; color: var(--gold); flex: none;
+  font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 1.1rem; color: var(--gold-dark); flex: none;
 }
 .bill-row .nm { flex: 1; min-width: 0; font-size: 1rem; }
 .bill-row .pr { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
@@ -132,13 +148,13 @@ body {
   min-width: 42px; min-height: 42px; border-radius: 10px; border: none; flex: none;
   background: transparent; color: var(--danger); font-size: 1.3rem; cursor: pointer;
 }
-.bill-row .rm:active { background: var(--surface-2); }
+.bill-row .rm:active { background: var(--danger-bg); }
 
 .bill-total {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 18px 16px; background: var(--surface-2); font-size: 1.05rem;
+  padding: 18px 16px; background: var(--surface-2); font-size: 1.05rem; border-top: 1px solid var(--line);
 }
-.bill-total b { font-family: 'Frank Ruhl Libre', serif; font-size: 1.7rem; color: var(--gold); }
+.bill-total b { font-family: 'Frank Ruhl Libre', serif; font-size: 1.7rem; color: var(--gold-dark); }
 
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
 .actions .wide { grid-column: 1 / -1; }
@@ -147,43 +163,66 @@ body {
 #menu-view .cats { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 14px; }
 .cat {
   min-height: 48px; padding: 0 20px; border-radius: 50px; border: 1.5px solid var(--line);
-  background: transparent; color: var(--muted); font-family: inherit; font-size: .95rem;
+  background: var(--surface); color: var(--muted); font-family: inherit; font-size: .95rem;
   font-weight: 600; white-space: nowrap; cursor: pointer; flex: none;
 }
-.cat.active { background: var(--gold); border-color: var(--gold); color: #1A1308; }
+.cat.active { background: var(--gold); border-color: var(--gold); color: #fff; }
 
 .dishes { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
 .dcard {
   background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
   padding: 16px 14px; min-height: 96px; cursor: pointer; text-align: start;
   display: flex; flex-direction: column; gap: 6px; color: var(--fg); font-family: inherit;
-  transition: transform .08s, border-color .15s;
+  transition: transform .08s, border-color .15s; box-shadow: var(--shadow);
 }
 .dcard:active { transform: scale(.96); border-color: var(--gold); }
 .dcard .dn { font-size: .98rem; font-weight: 500; line-height: 1.35; }
-.dcard .dp { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 1.15rem; color: var(--gold); margin-top: auto; }
+.dcard .dp { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 1.15rem; color: var(--gold-dark); margin-top: auto; }
+
+/* ---------- הזמנות שולחן ---------- */
+.res-list { display: flex; flex-direction: column; gap: 12px; }
+.rcard {
+  background: var(--surface); border: 1px solid var(--line); border-right: 4px solid var(--reserved);
+  border-radius: 14px; padding: 16px; cursor: pointer; text-align: start; width: 100%;
+  color: var(--fg); font-family: inherit; display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--shadow); transition: transform .08s;
+}
+.rcard:active { transform: scale(.985); }
+.rcard .rmain { flex: 1; min-width: 0; }
+.rcard .rname { font-size: 1.1rem; font-weight: 600; }
+.rcard .rmeta { font-size: .85rem; color: var(--muted); }
+.rcard .rsize {
+  min-width: 52px; height: 52px; border-radius: 12px; background: var(--reserved-bg); color: var(--reserved);
+  display: flex; align-items: center; justify-content: center; flex: none;
+  font-family: 'Frank Ruhl Libre', serif; font-size: 1.35rem; font-weight: 700;
+}
+.empty-state { text-align: center; color: var(--muted); padding: 60px 20px; }
 
 /* ---------- חלונית ---------- */
 .sheet-bg {
-  position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 50;
+  position: fixed; inset: 0; background: rgba(32,22,7,.45); z-index: 50;
   display: flex; align-items: center; justify-content: center; padding: 20px;
 }
-.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 420px; }
-.sheet h3 { font-family: 'Frank Ruhl Libre', serif; font-size: 1.3rem; margin-bottom: 6px; }
+.sheet {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+  padding: 28px 24px; width: 100%; max-width: 430px; box-shadow: 0 20px 60px rgba(32,22,7,.25);
+}
+.sheet h3 { font-family: 'Frank Ruhl Libre', serif; font-size: 1.35rem; margin-bottom: 6px; }
 .sheet p { color: var(--muted); font-size: .92rem; margin-bottom: 20px; }
-.sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.sheet .stack { display: flex; flex-direction: column; gap: 11px; }
+.sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 /* ---------- טוסט ---------- */
 #toast {
   position: fixed; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%) translateY(140px);
-  background: var(--surface-2); border: 1px solid var(--line); color: var(--fg);
+  background: var(--fg); color: var(--surface);
   padding: 14px 26px; border-radius: 50px; font-size: .98rem; z-index: 90;
-  transition: transform .28s; max-width: 90vw; text-align: center;
+  transition: transform .28s; max-width: 90vw; text-align: center; box-shadow: var(--shadow);
 }
 #toast.show { transform: translateX(-50%) translateY(0); }
-#toast.ok { background: var(--free); color: #08160E; border-color: var(--free); }
-#toast.err { background: var(--danger); color: #fff; border-color: var(--danger); }
+#toast.ok { background: var(--free); color: #fff; }
+#toast.err { background: var(--danger); color: #fff; }
 
 .loading { text-align: center; color: var(--muted); padding: 50px 20px; }
 
