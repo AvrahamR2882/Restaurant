@@ -65,8 +65,18 @@ async function init() {
 }
 
 function start(user) {
+  // ניתוב לפי תפקיד. מנהל שייך לפאנל הניהול — אלא אם בחר במפורש להיכנס לכאן
+  // (הקישור מהפאנל מוסיף ?stay=1), למשל כשהוא מחליף משמרת של מלצר.
+  const chose = new URLSearchParams(location.search).has('stay');
+  if (user.role === 'manager' && !chose) {
+    location.replace('/admin.html');
+    return;
+  }
+
   state.user = user;
   $('who').textContent = user.username;
+  // מנהל שנמצא כאן מקבל דרך חזרה לפאנל
+  $('to-admin').classList.toggle('hidden', user.role !== 'manager');
   show('floor-view');
   loadFloor();
 }
