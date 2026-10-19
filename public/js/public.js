@@ -69,6 +69,9 @@ function initReservationForm() {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn.disabled) return; // שליחה כבר בתהליך — מונע הזמנה כפולה
+    submitBtn.disabled = true;
     note.className = 'form-note';
     note.textContent = 'שולח...';
 
@@ -87,6 +90,8 @@ function initReservationForm() {
     } catch (err) {
       note.className = 'form-note error';
       note.textContent = `אירעה שגיאה: ${err.message}`;
+    } finally {
+      submitBtn.disabled = false;
     }
   });
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <!-- viewport-fit=cover: שימוש במסך המלא באייפד/אייפון כולל אזורי הבטיחות -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <title>מלצר · אין עוד מלבדו</title>
+  <link rel="icon" type="image/jpeg" href="/images/logo.jpg">
+
+  <!-- מאפשר "הוסף למסך הבית" — ייפתח במסך מלא, בלי סרגלי הדפדפן -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="מלצר">
+  <link rel="apple-touch-icon" href="/images/logo.jpg">
+  <meta name="theme-color" content="#16120C">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Heebo:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/waiter.css">
+</head>
+<body>
+
+  <!-- ===== התחברות ===== -->
+  <div id="login-view">
+    <form class="login-card" id="login-form">
+      <h1>אין עוד מלבדו</h1>
+      <div class="sub">מסך מלצר</div>
+      <div class="field">
+        <label for="u">שם משתמש</label>
+        <input type="text" id="u" autocomplete="username" autocapitalize="none" required>
+      </div>
+      <div class="field">
+        <label for="p">סיסמה</label>
+        <input type="password" id="p" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-gold btn-full">כניסה</button>
+      <p id="login-note"></p>
+    </form>
+  </div>
+
+  <!-- ===== מפת שולחנות ===== -->
+  <div id="floor-view" class="hidden">
+    <div class="topbar">
+      <h2>שולחנות</h2>
+      <span class="spacer"></span>
+      <span class="who" id="who"></span>
+      <button class="icon-btn" id="refresh" aria-label="רענן">⟳</button>
+      <button class="icon-btn" id="logout" aria-label="יציאה">⏻</button>
+    </div>
+    <div class="main">
+      <div class="legend">
+        <span><i style="background:var(--free)"></i> פנוי</span>
+        <span><i style="background:var(--occupied)"></i> תפוס</span>
+        <span><i style="background:var(--reserved)"></i> מוזמן</span>
+      </div>
+      <div class="floor" id="floor"><p class="loading">טוען...</p></div>
+    </div>
+  </div>
+
+  <!-- ===== חשבון של שולחן ===== -->
+  <div id="order-view" class="hidden">
+    <div class="topbar">
+      <button class="icon-btn" id="back-floor" aria-label="חזרה">→</button>
+      <h2 id="order-title">שולחן</h2>
+      <span class="spacer"></span>
+      <span class="who" id="order-sub"></span>
+    </div>
+    <div class="main">
+      <div class="bill" id="bill"></div>
+      <div class="actions">
+        <button class="btn btn-gold wide" id="add-dish">+ הוספת מנות</button>
+        <button class="btn btn-green" id="close-bill">סגירת חשבון</button>
+        <button class="btn btn-ghost" id="cancel-bill">ביטול</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== בוחר מנות ===== -->
+  <div id="menu-view" class="hidden">
+    <div class="topbar">
+      <button class="icon-btn" id="back-order" aria-label="חזרה">→</button>
+      <h2>הוספת מנה</h2>
+      <span class="spacer"></span>
+      <span class="who" id="menu-sub"></span>
+    </div>
+    <div class="main">
+      <div class="cats" id="cats"></div>
+      <div class="dishes" id="dishes"></div>
+    </div>
+  </div>
+
+  <div id="sheet-host"></div>
+  <div id="toast"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/waiter.js"></script>
+</body>
+</html>

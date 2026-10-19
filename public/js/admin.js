@@ -9,7 +9,10 @@ function toast(msg, type = '') {
   const t = $('toast');
   t.textContent = msg;
   t.className = `show ${type}`;
-  setTimeout(() => (t.className = ''), 2800);
+  // מבטלים את הטיימר של ההודעה הקודמת — אחרת הוא היה מעלים את החדשה מוקדם מדי
+  clearTimeout(t._hideTimer);
+  // מסירים רק את show: הצבע (שגיאה/הצלחה) נשאר עד שההודעה יוצאת מהמסך
+  t._hideTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
 const CAT_HE = { starter: 'ראשונה', main: 'עיקרית', dessert: 'קינוח', drink: 'שתייה' };
@@ -42,6 +45,13 @@ function showLogin() {
   $('app-view').classList.add('hidden');
 }
 function showApp(user) {
+  // ניתוב לפי תפקיד (לא לפי מכשיר): מלצר מועבר למסך המלצר, שמותאם לעבודה
+  // בין השולחנות. מנהל נשאר כאן, ויכול לפתוח את מסך המלצר מהקישור בסרגל.
+  if (user.role === 'waiter') {
+    location.replace('/waiter.html');
+    return;
+  }
+
   state.user = user;
   $('login-view').classList.add('hidden');
   $('app-view').classList.remove('hidden');
