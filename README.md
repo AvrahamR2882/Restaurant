@@ -179,6 +179,45 @@ npm start
 - קובץ `.env.example` מצורף כתבנית — יש להעתיקו ל-`.env` לפני הרצה.
 - בסיס הנתונים (`database.sqlite`) נוצר אוטומטית בהרצה הראשונה.
 
+## ☁️ פריסה לענן (Render)
+
+הפרויקט תומך בשני מסדי נתונים, והבחירה אוטומטית לפי הסביבה:
+
+| סביבה | מסד נתונים | למה |
+|---|---|---|
+| מקומית | SQLite (קובץ) | אפס התקנה — מריצים `npm start` וזהו |
+| בענן | PostgreSQL | בשירותי אירוח הדיסק זמני, וקובץ SQLite היה נמחק בכל הפעלה |
+
+המעבר נעשה **בקובץ אחד בלבד** (`config/database.js`) — המודלים, ה-controllers והשאילתות
+לא השתנו כלל. זהו היתרון המרכזי של עבודה עם ORM.
+
+### שלבי הפריסה
+
+1. **מסד נתונים** — ב-[Render](https://render.com) → `New` → `PostgreSQL` (תוכנית Free).
+   לאחר היצירה, העתק את ה-**Internal Database URL**.
+
+2. **שירות האתר** — `New` → `Web Service` → חבר את ריפו ה-GitHub. הגדרות:
+   | שדה | ערך |
+   |---|---|
+   | Build Command | `npm install && npm run seed` |
+   | Start Command | `npm start` |
+
+   > `npm run seed` בטוח להרצה חוזרת (`findOrCreate`), ולכן אפשר להשאירו בכל פריסה —
+   > הוא מוודא שהמנהל והתפריט ההתחלתי קיימים, בלי ליצור כפילויות.
+
+3. **משתני סביבה** (לשונית Environment):
+   | משתנה | ערך |
+   |---|---|
+   | `DATABASE_URL` | ה-Internal Database URL משלב 1 |
+   | `JWT_SECRET` | מחרוזת אקראית ארוכה |
+   | `SEED_ADMIN_USERNAME` | שם המנהל הראשוני |
+   | `SEED_ADMIN_PASSWORD` | סיסמת המנהל הראשוני |
+
+   > `PORT` נקבע אוטומטית ע"י Render — השרת כבר קורא אותו מ-`process.env.PORT`.
+
+4. **סיום** — האתר יהיה זמין בכתובת כמו `https://<שם-השירות>.onrender.com`,
+   ומשם גם `/admin.html` ו-`/waiter.html`. פועל מכל רשת, לא רק מה-WiFi המקומי.
+
 ## 🛠️ טכנולוגיות
 
 Node.js · Express · Sequelize · SQLite · JWT · bcrypt · Helmet · express-rate-limit · dotenv
