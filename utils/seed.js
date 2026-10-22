@@ -256,6 +256,15 @@ async function seed() {
       },
     });
 
+    // defaults חלים רק ביצירה. לכן אם המנהל כבר קיים — מסנכרנים את הסיסמה
+    // מחדש ממשתנה הסביבה, כך שהוא תמיד מקור האמת.
+    // זה גם מנגנון איפוס סיסמה: משנים את המשתנה, מריצים seed, וזהו.
+    let adminPasswordReset = false;
+    if (!adminCreated && process.env.SEED_ADMIN_PASSWORD) {
+      await admin.update({ password: process.env.SEED_ADMIN_PASSWORD });
+      adminPasswordReset = true;
+    }
+
     // ---- מלצר לדוגמה ----
     const [, waiterCreated] = await db.User.findOrCreate({
       where: { username: 'waiter' },
@@ -277,7 +286,7 @@ async function seed() {
     }
 
     console.log('✅ Seed complete:');
-    console.log(`   Manager: ${admin.username} (${adminCreated ? 'created' : 'already existed'})`);
+    console.log(`   Manager: ${admin.username} (${adminCreated ? 'created' : adminPasswordReset ? 'password reset from env' : 'already existed'})`);
     console.log(`   Waiter:  waiter (${waiterCreated ? 'created' : 'already existed'})`);
     console.log(`   Dishes:  +${dishCount} new (${DISHES.length} total)`);
     console.log(`   Tables:  +${tableCount} new (${TABLES.length} total)`);
