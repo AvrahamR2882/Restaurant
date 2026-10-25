@@ -306,7 +306,7 @@ function renderOrder(o) {
   const isOpen = o.status === 'open';
   const items = (o.OrderItems || []).map((it) => `
     <div class="order-item">
-      <span>${it.quantity} × ${esc(it.Dish ? it.Dish.name : 'מנה')}</span>
+      <span>${it.quantity} × ${esc(it.Dish ? it.Dish.name : 'מנה')}${it.notes ? ` <em style="color:var(--gold-dark);font-style:normal">· ${esc(it.notes)}</em>` : ''}</span>
       <span>₪${it.quantity * it.priceAtOrder}
         ${isOpen ? `<button class="btn btn-ghost btn-sm" data-del-item="${o.id}:${it.id}" style="margin-inline-start:6px">✕</button>` : ''}
       </span>

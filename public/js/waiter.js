@@ -342,7 +342,10 @@ function renderBill() {
     ? items.map((it) => `
         <div class="bill-row">
           <span class="q">${it.quantity}</span>
-          <span class="nm">${esc(it.Dish ? it.Dish.name : 'מנה')}</span>
+          <span class="nm">
+            ${esc(it.Dish ? it.Dish.name : 'מנה')}
+            ${it.notes ? `<span class="note">${esc(it.notes)}</span>` : ''}
+          </span>
           <span class="pr">${money(it.quantity * it.priceAtOrder)}</span>
           <button class="rm" data-item="${it.id}" aria-label="הסר">✕</button>
         </div>`).join('')
@@ -427,17 +430,78 @@ $('cats').addEventListener('click', (e) => {
   renderDishes();
 });
 
-// לחיצה על מנה = הוספה מיידית. נשארים במסך כדי להוסיף עוד.
+// הערות מהירות — לחיצה אחת במקום הקלדה. מותאם לרוב הבקשות במסעדה.
+const QUICK_NOTES = ['בלי בצל', 'בלי חריף', 'ללא גלוטן', 'מדיום', 'עשוי היטב', 'רוטב בצד', 'בלי מלח'];
+
+// לחיצה על מנה פותחת חלונית: כמות + הערה, והוספה בפעולה אחת.
 $('dishes').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-dish]');
   if (!btn) return;
   const dish = state.dishes.find((d) => d.id === Number(btn.dataset.dish));
-  guard(async () => {
-    const res = await API.post(`/orders/${state.order.id}/items`, { dishId: dish.id, quantity: 1 });
+  openAddSheet(dish);
+});
+
+function openAddSheet(dish) {
+  let qty = 1;
+
+  sheet(`
+    <h3>${esc(dish.name)}</h3>
+    <p>${money(dish.price)} ליחידה</p>
+
+    <div class="qty-row">
+      <button class="qty-btn" id="minus" aria-label="הפחת">−</button>
+      <span class="qty-val" id="qval">1</span>
+      <button class="qty-btn" id="plus" aria-label="הוסף">+</button>
+    </div>
+
+    <div class="field">
+      <label for="note">הערה למטבח</label>
+      <input type="text" id="note" placeholder="לא חובה" autocomplete="off">
+    </div>
+    <div class="chips">
+      ${QUICK_NOTES.map((n) => `<button class="chip" data-note="${esc(n)}">${esc(n)}</button>`).join('')}
+    </div>
+
+    <div class="row" style="margin-top:18px">
+      <button class="btn btn-gold" id="add">הוסף <span id="sum">${money(dish.price)}</span></button>
+      <button class="btn btn-ghost" id="cancel">ביטול</button>
+    </div>`);
+
+  const refresh = () => {
+    $('qval').textContent = qty;
+    $('sum').textContent = money(dish.price * qty);
+    $('minus').disabled = qty <= 1;
+  };
+  refresh();
+
+  $('minus').onclick = () => { if (qty > 1) { qty--; refresh(); } };
+  $('plus').onclick = () => { qty++; refresh(); };
+
+  // לחיצה על הערה מהירה מוסיפה אותה לשדה (ולחיצה חוזרת מסירה)
+  $('sheet-host').querySelectorAll('[data-note]').forEach((c) => {
+    c.onclick = () => {
+      const input = $('note');
+      const val = c.dataset.note;
+      const parts = input.value.split('·').map((s) => s.trim()).filter(Boolean);
+      const i = parts.indexOf(val);
+      if (i >= 0) parts.splice(i, 1); else parts.push(val);
+      input.value = parts.join(' · ');
+      c.classList.toggle('on', i < 0);
+    };
+  });
+
+  $('cancel').onclick = closeSheet;
+  $('add').onclick = () => guard(async () => {
+    const res = await API.post(`/orders/${state.order.id}/items`, {
+      dishId: dish.id,
+      quantity: qty,
+      notes: $('note').value.trim() || null,
+    });
     state.order = res.data;
     renderBill();
-    toast(`${dish.name} · ${money(state.order.total)}`, 'ok');
+    closeSheet();
+    toast(`${qty}× ${dish.name} · ${money(state.order.total)}`, 'ok');
   });
-});
+}
 
 init();

@@ -30,6 +30,13 @@ module.exports = (sequelize) => {
           min: { args: [0], msg: 'Price cannot be negative' },
         },
       },
+      notes: {
+        // הערת הכנה למטבח: "בלי בצל", "מדיום", "ללא גלוטן".
+        // ההערה היא חלק מזהות השורה — שתי מנות זהות עם הערות שונות
+        // הן שתי שורות נפרדות בחשבון, ולא שורה אחת בכמות 2.
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
     {
       tableName: 'order_items',

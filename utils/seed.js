@@ -4,6 +4,7 @@
 // בטוח להרצה חוזרת (idempotent) — משתמש ב-findOrCreate כדי לא ליצור כפילויות.
 
 require('dotenv').config();
+const { DataTypes } = require('sequelize');
 const db = require('../models');
 
 // התפריט המלא. הסדר כאן הוא הסדר שבו המנות יוצגו באתר (המיון ב-API הוא לפי id).
@@ -347,6 +348,20 @@ async function seed() {
   try {
     // יוצר את הטבלאות אם אינן קיימות (לא מוחק נתונים קיימים)
     await db.sequelize.sync();
+
+    // ---- מיגרציות קלות ----
+    // sync() יוצר טבלאות חסרות, אבל לא מוסיף עמודות לטבלה שכבר קיימת.
+    // לכן עמודה שנוספה אחרי שה-DB כבר נוצר דורשת הוספה מפורשת.
+    // הבדיקה הופכת את זה לבטוח להרצה חוזרת.
+    const queryInterface = db.sequelize.getQueryInterface();
+    const orderItemColumns = await queryInterface.describeTable('order_items');
+    if (!orderItemColumns.notes) {
+      await queryInterface.addColumn('order_items', 'notes', {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      });
+      console.log('🔧 Migration: added order_items.notes');
+    }
 
     // ---- משתמש מנהל ראשוני (מתוך .env) ----
     const [admin, adminCreated] = await db.User.findOrCreate({

@@ -214,6 +214,41 @@ body {
 .sheet .stack { display: flex; flex-direction: column; gap: 11px; }
 .sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+/* ---------- בורר כמות ---------- */
+.qty-row {
+  display: flex; align-items: center; justify-content: center; gap: 22px;
+  margin: 6px 0 20px; padding: 10px 0;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 14px;
+}
+.qty-btn {
+  width: 60px; height: 60px; border-radius: 50%; border: 1.5px solid var(--line);
+  background: var(--surface); color: var(--fg); font-size: 1.9rem; font-weight: 400;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  line-height: 1; transition: transform .08s;
+}
+.qty-btn:active { transform: scale(.92); background: var(--surface-2); }
+.qty-btn:disabled { opacity: .3; }
+.qty-val {
+  font-family: 'Frank Ruhl Libre', serif; font-size: 2.3rem; font-weight: 700;
+  min-width: 56px; text-align: center; color: var(--gold-dark);
+}
+
+/* ---------- הערות מהירות ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip {
+  min-height: 42px; padding: 0 15px; border-radius: 50px;
+  border: 1.5px solid var(--line); background: var(--surface);
+  color: var(--muted); font-family: inherit; font-size: .88rem; cursor: pointer;
+  transition: transform .08s;
+}
+.chip:active { transform: scale(.95); }
+.chip.on { background: var(--gold); border-color: var(--gold); color: #fff; font-weight: 600; }
+
+/* הערה בשורת החשבון */
+.bill-row .nm .note {
+  display: block; font-size: .83rem; color: var(--gold-dark); margin-top: 2px;
+}
+
 /* ---------- טוסט ---------- */
 #toast {
   position: fixed; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom, 0px));

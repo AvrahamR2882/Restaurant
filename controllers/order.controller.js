@@ -85,7 +85,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
 // POST /api/orders/:id/items — הוספת מנה להזמנה (אם קיימת — מגדיל כמות)
 exports.addItem = asyncHandler(async (req, res) => {
-  const { dishId, quantity } = req.body;
+  const { dishId, quantity, notes } = req.body;
 
   const order = await Order.findByPk(req.params.id);
   if (!order) throw new AppError(404, `Order with id ${req.params.id} not found`);
@@ -98,8 +98,14 @@ exports.addItem = asyncHandler(async (req, res) => {
 
   const qty = quantity && quantity > 0 ? quantity : 1;
 
-  // אם המנה כבר בהזמנה — מגדילים כמות; אחרת יוצרים שורה חדשה עם "צילום" המחיר.
-  let item = await OrderItem.findOne({ where: { orderId: order.id, dishId } });
+  // הערת הכנה למטבח. מחרוזת ריקה נשמרת כ-null, כדי שכל ה"בלי הערה" יהיו זהים.
+  const cleanNotes = (notes || '').trim() || null;
+
+  // איחוד שורות רק כשגם המנה וגם ההערה זהות. "2× סטייק" ו-"סטייק מדיום"
+  // הם שתי שורות נפרדות — אחרת ההערה של אחד הייתה נדרסת.
+  let item = await OrderItem.findOne({
+    where: { orderId: order.id, dishId, notes: cleanNotes },
+  });
   if (item) {
     await item.update({ quantity: item.quantity + qty });
   } else {
@@ -108,6 +114,7 @@ exports.addItem = asyncHandler(async (req, res) => {
       dishId,
       quantity: qty,
       priceAtOrder: dish.price,
+      notes: cleanNotes,
     });
   }
 
